@@ -1,0 +1,38 @@
+<?php
+include 'config.php';
+include 'Project.php';
+
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    header('Location: index.php'); // Redirect to login if not logged in
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Assuming user ID is stored in session after login
+    $project = new Project($conn);
+    
+    if ($project->create($_SESSION['user_id'], $_POST['title'], $_POST['description'], $_POST['goal'])) {
+        echo "Project created successfully!";
+    } else {
+        echo "Failed to create project.";
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Project</title>
+</head>
+<body>
+<h2>Create a New Project</h2>
+<form method="post">
+    Title: <input type="text" name="title" required><br>
+    Description: <textarea name="description" required></textarea><br>
+    Goal Amount: <input type="number" name="goal" step="0.01" required><br>
+    <input type="submit" value="Create Project">
+</form>
+</body>
+</html>

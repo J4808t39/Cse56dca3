@@ -1,0 +1,19 @@
+<?php
+class Project {
+    private $conn;
+
+    public function __construct($db) {
+        $this->conn = $db;
+    }
+
+    public function create($user_id, $title, $description, $goal) {
+        $stmt = $this->conn->prepare("INSERT INTO projects (user_id, title, description, goal) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("issd", $user_id, $title, $description, $goal);
+        return $stmt->execute();
+    }
+
+    public function getProjects() {
+        return $this->conn->query("SELECT * FROM projects");
+    }
+}
+?>
